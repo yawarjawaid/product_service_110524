@@ -2,6 +2,7 @@ package in.yjawaid.product_service_110524.services;
 
 import in.yjawaid.product_service_110524.dtos.FakeStoreDTO;
 import in.yjawaid.product_service_110524.dtos.ProductResponseDTO;
+import in.yjawaid.product_service_110524.exceptions.ProductNotFoundException;
 import in.yjawaid.product_service_110524.model.Category;
 import in.yjawaid.product_service_110524.model.Product;
 import org.springframework.stereotype.Service;
@@ -22,19 +23,43 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override  // for getting product with productId
-    public ProductResponseDTO getSingleProduct(int productId)
+    public Product getSingleProduct(int productId) throws ProductNotFoundException
     {
         FakeStoreDTO fakeStoreDTO = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + productId,
                 FakeStoreDTO.class);
 
-        return fakeStoreDTO.toProductResponseDTO();
+
+        if (fakeStoreDTO == null)
+            throw new ProductNotFoundException(
+                    "Product with id " + productId+ " not found, try a product with id less than 21");
+
+        return fakeStoreDTO.toProduct();
+
+
     }
 
+    @Override
+   public List<Product> getAllProducts()
+   {
+        FakeStoreDTO[] fakeStoreDTOList = restTemplate.getForObject(
+                "https://fakestoreapi.com/products/",
+                FakeStoreDTO[].class
+        );
 
+        // convert all fakestore dto to product object
+
+       List<Product> products = new ArrayList<>();
+
+       for (FakeStoreDTO fakeStoreDTO : fakeStoreDTOList)
+       {
+           products.add(fakeStoreDTO.toProduct());
+       }
+        return products;
+   }
 
     @Override  //for adding a new product
-    public ProductResponseDTO addProduct(
+    public Product addProduct(
             String title,
             String description,
             String imageUrl,
@@ -55,7 +80,7 @@ public class FakeStoreProductService implements ProductService{
                  FakeStoreDTO.class
                  );
 
-         return fakeStoreDTO.toProductResponseDTO();
+         return fakeStoreDTO.toProduct();
 
     }
 

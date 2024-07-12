@@ -1,6 +1,7 @@
 package in.yjawaid.product_service_110524.dtos;
 
 import in.yjawaid.product_service_110524.model.Category;
+import in.yjawaid.product_service_110524.model.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,18 +16,22 @@ public class FakeStoreDTO {
     private String image;
     private String category;
 
-    public ProductResponseDTO toProductResponseDTO()
+    public Product toProduct()
     {
-        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+        Product product = new Product();
 
-        productResponseDTO.setId(id);
-        productResponseDTO.setTitle(title);
-        productResponseDTO.setDescription(description);
-        productResponseDTO.setPrice(price);
-        productResponseDTO.setImage(image);
-        productResponseDTO.setCategory(category);
+        product.setId(id);
+        product.setTitle(title);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setImageUrl(image);
 
-        return productResponseDTO;
+        Category categoryObj = new Category();
+        categoryObj.setTitle(category);
+
+        product.setCategory(categoryObj);
+
+        return product;
 
       }
 }
