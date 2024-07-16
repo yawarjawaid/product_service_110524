@@ -8,8 +8,8 @@ public interface ProductProjection {
 
     int getId();
     String getTitle();
-            String getDescription();
-    BigDecimal getPrice();
+    String getDescription();
+    double getPrice();
     Category getCategory();
     String getImageUrl();
 }
